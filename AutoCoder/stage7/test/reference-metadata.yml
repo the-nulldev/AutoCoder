@@ -1,4 +1,4 @@
-name: 'AutoCoder Action'
+name: 'AutoCoder'
 description: 'Generates code using ChatGPT and creates a pull request with the generated code.'
 author: 'Your Name'
 inputs:
@@ -18,7 +18,7 @@ inputs:
     description: 'Path to the script that interacts with ChatGPT'
     required: true
     default: './scripts/script.sh'
-  label:
+  LABEL:
     description: 'The label to trigger the action'
     required: true
     default: 'autocoder-bot'
@@ -71,8 +71,8 @@ runs:
         OPENAI_API_KEY: ${{ inputs.OPENAI_API_KEY }}
     - name: Commit files
       run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
+        git config --local user.email "actions@github.com"
+        git config --local user.name "autocoder-bot"
         git add .
         git commit -m "Add code snippets from issue #${{ inputs.ISSUE_NUMBER }}" -a || echo "No changes to commit"
       shell: bash
