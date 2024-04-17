@@ -1,18 +1,17 @@
+import os
+
 import yaml
-from hstest import StageTest, CheckResult, dynamic_test
 from github import Github
 from github import GithubException
-from AutoCoder.stage2.main import url
-import os
-import re
+from hstest import StageTest, CheckResult, dynamic_test, WrongAnswer
 
-echo_command = re.compile(r"echo\s+[\"']Hello,\s+world![\"']", re.IGNORECASE)
+from AutoCoder.stage2.main import url
 
 
 class GitTest(StageTest):
     g = Github(os.getenv("GITHUB_TOKEN")) if os.getenv("GITHUB_TOKEN") else Github()
 
-    repo_name = url.split('/')[-1]
+    repo_name = url.split('/')[-1].replace('.git', '')
     username = url.split('/')[-2]
     full_repo_name = f"{username}/{repo_name}"
     repo = g.get_repo(full_repo_name)
@@ -71,14 +70,14 @@ class GitTest(StageTest):
             steps = job.get("steps", [])
 
             expected_steps = {
-                "checkout_repository": "actions/checkout@",
+                "checkout_repository": "actions/checkout@v",
                 "print_hello_world_using_the_echo_command": "echo"
             }
 
             for step_name, expected_value in expected_steps.items():
-                # Use startswith for all steps
-                if not any(step.get("uses", "").startswith(expected_value) for step in steps):
+                if not any(step.get("run", "").startswith(expected_value) or step.get("uses", "").startswith(expected_value) for step in steps):
                     return CheckResult.wrong(f"The job does not have a step to {step_name.replace('_', ' ')}.")
+
             return CheckResult.correct()
         except GithubException as e:
             if e.status == 404:

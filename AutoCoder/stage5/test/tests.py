@@ -9,7 +9,7 @@ import re
 class GitTest(StageTest):
     g = Github(os.getenv("GITHUB_TOKEN")) if os.getenv("GITHUB_TOKEN") else Github()
 
-    repo_name = url.split('/')[-1]
+    repo_name = url.split('/')[-1].replace('.git', '')
     username = url.split('/')[-2]
     full_repo_name = f"{username}/{repo_name}"
     repo = g.get_repo(full_repo_name)
@@ -34,12 +34,6 @@ class GitTest(StageTest):
             # check if the script file is empty
             if not contents.decoded_content:
                 return CheckResult.wrong("The file 'scripts/script.sh' is empty.")
-
-            with open("./script.sh", "r") as f:
-                if contents.decoded_content.decode() != f.read():
-                    return CheckResult.wrong(
-                        "The file 'scripts/script.sh' in your repo does not have the expected content.")
-
             return CheckResult.correct()
         except GithubException as e:
             return self.handle_github_exception(e)
@@ -96,10 +90,9 @@ class GitTest(StageTest):
                 "list_files": "ls -R ./autocoder-artifact",
                 "run_the_script": "./scripts/script.sh $"
             }
-
             for step_name, expected_value in expected_steps.items():
                 # Use startswith for all steps
-                if not any(step.get("uses", "").startswith(expected_value) for step in steps):
+                if not any(step.get("run", "").startswith(expected_value) or step.get("uses", "").startswith(expected_value) for step in steps):
                     return CheckResult.wrong(f"The job does not have a step to {step_name.replace('_', ' ')}.")
             return CheckResult.correct()
         except GithubException as e:

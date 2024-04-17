@@ -8,7 +8,7 @@ import os
 class GitTest(StageTest):
     g = Github(os.getenv("GITHUB_TOKEN")) if os.getenv("GITHUB_TOKEN") else Github()
 
-    repo_name = url.split('/')[-1]
+    repo_name = url.split('/')[-1].replace('.git', '')
     username = url.split('/')[-2]
     full_repo_name = f"{username}/{repo_name}"
     repo = g.get_repo(full_repo_name)

@@ -8,7 +8,7 @@ from AutoCoder.stage7.main import url
 
 class GitTest(StageTest):
     g = Github(os.getenv("GITHUB_TOKEN")) if os.getenv("GITHUB_TOKEN") else Github()
-    repo_name = url.split('/')[-1]
+    repo_name = url.split('/')[-1].replace('.git', '')
     username = url.split('/')[-2]
     full_repo_name = f"{username}/{repo_name}"
     repo = g.get_repo(full_repo_name)
@@ -187,3 +187,7 @@ class GitTest(StageTest):
             return CheckResult.correct()
         except Exception as e:
             return CheckResult.wrong(f"Something went wrong. Encountered: {e}")
+
+
+if __name__ == '__main__':
+    GitTest().run_tests()
