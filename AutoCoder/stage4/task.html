@@ -1,0 +1,64 @@
+<div class="step-text">
+    <h2>Description</h2>
+
+    <p>Now, you know about what issues are and their role in the software development lifecycle. In this stage, we will craft issues that act as prompts for ChatGPT to process and generate code based on their contents. We must ensure that:</p>
+
+    <ul>
+        <li>Not all prompts are sent to ChatGPT;</li>
+        <li>The content is a useful prompt that allows ChatGPT to generate accurate and quality code;</li>
+    </ul>
+
+    <h2>Objectives</h2>
+
+    <ul>
+        <li>Create a new GitHub Issue in the repository;</li>
+        <li>Give it a meaningful title;</li>
+        <li>Create a body that will be used as the prompt sent to ChatGPT. Ensure that it follows the guidelines for writing a good prompt;</li>
+        <li>The issue&#39;s body should contain descriptions of the required filenames and their expected content that ChatGPT should generate;</li>
+        <li>Add the label&nbsp;autocoder-bot&nbsp;to it so that only issues with this label are sent to ChatGPT;</li>
+    </ul>
+
+    <h2>Examples</h2>
+
+    <p>Here are some examples of good prompts that will generate a good, well-formatted response. Note that only the issue body is provided in Markdown syntax.&nbsp;</p>
+
+    <p><strong>Example 1:</strong></p>
+
+    <pre>
+<code class="language-markdown">Create a Node.js project structure with the following directories and files:
+- an `src` directory containing the index.js entry point,
+- a `package.json` at the root with metadata and dependencies,
+- a `.gitignore` file at the root to exclude node_modules and .env,
+- a `README.md` providing a brief project description.
+Ensure `index.js` in `src` sets up an Express server listening on port 3000.
+Populate `package.json` with only the necessary Express dependencies.
+Provide JSON-formatted snippets for each file, with keys as paths like `src/index.js`
+and corresponding values as file contents.</code></pre>
+
+    <p><strong>Example 2:</strong></p>
+
+    <pre>
+<code class="language-markdown">## Problem Description
+You are tasked with setting up a Docker Compose configuration for a web application.
+Create a Docker Compose file that defines two services:
+- a frontend service using an NGINX image
+- a backend service using a Node.js image.
+
+## Services
+1. Frontend:
+   - Image: nginx:latest
+   - Ports: 80:80
+   - Volumes: ./frontend:/usr/share/nginx/html
+
+2. Backend:
+   - Image: node:14
+   - Ports: 3000:3000
+   - Volumes: ./backend:/usr/src/app
+
+## Environment
+- Node.js version: 18
+- NGINX version: Latest</code></pre>
+
+    <p>After creating the issue and adding the proper labels, head back to your IDE and provide the full url of the repository. Finally, hit the <em>Check</em> button.</p>
+
+</div>

@@ -1,0 +1,52 @@
+name: Issue Interaction with ChatGPT
+
+on:
+  issues:
+    types:
+      - opened
+      - reopened
+      - labeled
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  interact-with-chatgpt:
+    runs-on: ubuntu-latest
+    if: contains(github.event.issue.labels.*.name, 'autocoder-bot')
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Make script executable
+        run: chmod +x ./scripts/script.sh
+
+      - name: Run interaction script
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: ./scripts/script.sh $GITHUB_TOKEN $REPOSITORY $ISSUE_NUMBER $OPENAI_API_KEY
+
+      - name: Commit files
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "autocoder-bot"
+          git add .
+          git commit -m "Add code snippets from issue #${{ github.event.issue.number }}" -a || echo "No changes to commit"
+
+      - name: Create pull request
+        if: success()
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "Add code snippets from issue #${{ github.event.issue.number }}"
+          title: "Add code snippets from issue #${{ github.event.issue.number }}"
+          body: |
+              This pull request adds code snippets from issue #${{ github.event.issue.number }}.
+          branch: "autocoder-branch-${{ github.event.issue.number }}"
+          base: "main"
+          labels: "autocoder-bot"
+          reviewers: "autocoder-bot"
+          assignees: "autocoder-bot"

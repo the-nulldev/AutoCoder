@@ -1,0 +1,113 @@
+<div class="step-text">
+    <h2>Description</h2>
+
+    <p>Now that you have a working GitHub Action that can generate code using ChatGPT, it&#39;s time to share your work with the world. In this stage, you will convert your custom GitHub Action into a reusable one. This requires creating an&nbsp;action.yml&nbsp;file, which contains all the necessary metadata for GitHub to understand and execute your action. You will define inputs, outputs, runs, and branding information so that other users can easily incorporate your action into their workflows. You will also create a README file to provide instructions on how to use your action.</p>
+
+    <p>By completing this stage, you will have transformed your project into a reusable GitHub Action that others can incorporate into their DevOps pipelines, potentially benefiting countless projects across the GitHub platform.</p>
+
+    <h2>Objectives</h2>
+
+    <p>The objectives are to:</p>
+
+    <ul>
+        <li>Prepare the&nbsp;action.yml&nbsp;file: Create an&nbsp;action.yml&nbsp;file at the root of your repository. This file will hold all the metadata about your action;</li>
+        <li>Define Action Metadata: Specify the name, description, author, and other relevant information about your action;</li>
+        <li>Set Inputs. While you can add as many inputs as you need, the following are required for your action to function:
+            <ul>
+                <li>GITHUB_TOKEN: Personal access token (PAT) used for GitHub API authentication. This token is required to create pull requests and handle other repository interactions;</li>
+                <li>REPOSITORY: The repository where the action will be executed;</li>
+                <li>ISSUE_NUMBER: The number of the issue that triggered the action;</li>
+                <li>OPENAI_API_KEY: API key for OpenAI, enabling interactions with the ChatGPT service to generate code based on issue descriptions;</li>
+                <li>SCRIPT_PATH: The path to the script that interacts with ChatGPT and generates code;</li>
+                <li>LABEL: allows users to customize the label that triggers the action;</li>
+            </ul>
+        </li>
+        <li>Configure the&nbsp;runs&nbsp;section: This is where you specify the entry point for your action and the language it uses. Remember, your action is now a composite action,&nbsp;and includes all&nbsp;the steps that were previously part of your workflow file;</li>
+        <li>Document usage: Write clear documentation on how to use your action, including examples of workflow files that utilize your action. This will help others understand how to implement it in their projects.</li>
+        <li>Test Your Action: Before you publish your action, ensure it works as a standalone component. Test it in a workflow in your repo to make sure it iss robust and functions as expected;</li>
+        <li>Publish: Commit and push the&nbsp;action.yml&nbsp;file to your repository. Tag your repository with a version number and publish a release to share your action with the GitHub community.</li>
+    </ul>
+
+    <h2>Examples</h2>
+
+    <p><strong>Example 1</strong></p>
+
+    <pre>
+<code class="language-yaml">
+name: 'AutoCoder'
+description: 'This action automates the process of generating code from GitHub issues using OpenAIs ChatGPT and subsequently creates a pull request with the generated code for review.'
+author: 'Your Name or Organization'
+
+inputs:
+  github_token:
+    description: 'Personal access token (PAT) used for GitHub API authentication. This token is required to create pull requests and handle other repository interactions.'
+    required: true
+  openai_api_key:
+    description: 'API key for OpenAI, enabling interactions with the ChatGPT service to generate code based on issue descriptions.'
+    required: true
+  issue_label:
+    description: 'The label assigned to GitHub issues that should be processed by the AutoCoder action. Only issues with this label will trigger the code generation process.'
+    required: true
+    default: 'autocoder-bot'
+
+outputs:
+  pull_request_url:
+    description: 'The URL of the pull request that has been automatically created, containing the auto-generated code for review and potential merging.'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Greet Users
+      run: echo "Hello, welcome to AutoCoder! Let's generate some code."
+      shell: bash
+    - name: Generate Code from Issue
+      run: |
+        # The script that interacts with ChatGPT and generates code goes here.
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+        OPENAI_API_KEY: ${{ inputs.openai_api_key }}
+    - name: Create Pull Request
+      run: |
+        # The script that creates a pull request with the generated code goes here.
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+    # Add additional steps as necessary, replicating the logic from your original workflow.
+</code></pre>
+
+    <p><strong>Example 1</strong></p>
+
+    <pre>
+<code class="language-markdown">
+## Using the AutoCoder Composite Action
+
+To use this action, set up a `.github/workflows/main.yml` file in your repository like that below
+
+
+name: AutoCodeGen
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  generate_code:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: AutoCoder Composite Action
+        uses: your-username/autocoder-action@v1
+        with:
+          github_token: $\{{ secrets.GITHUB_TOKEN }}
+          openai_api_key: $\{{ secrets.OPENAI_API_KEY }}
+          issue_label: 'autocoder'
+
+Make sure to replace `your-username` with your GitHub username and `autocoder-action` with the name of your repository. This configuration will invoke the AutoCoder action when an issue is labeled with the specified label.
+</code></pre>
+
+    <p style="text-align:center"><img alt="Sample workflow run" height="583" name="image.png" src="https://ucarecdn.com/750cf389-8a4a-442e-bd5c-20f7d81d723b/" width="1200" /></p>
+
+    <p>After creating the metadata file and testing it, head back to your IDE and provide the full url of your repository. Finally, hit the <em>Check</em> button.</p>
+
+</div>

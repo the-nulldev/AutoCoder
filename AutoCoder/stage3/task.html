@@ -1,0 +1,81 @@
+<div class="step-text">
+    <h2>Theory</h2>
+
+    <p>Before we dive into this stage, let&#39;s discuss what GitHub Issues and the GitHub API are.&nbsp;GitHub Issues act as the primary means of tracking tasks, enhancements, bugs, and other activities within a project&#39;s lifecycle on the GitHub platform. Essentially, an issue is a conversation thread that allows developers and stakeholders to discuss and manage changes to the project in a structured manner.&nbsp;Issues can be linked to pull requests to connect discussions with code changes in a repository.</p>
+
+    <p>Some key features of GitHub Issues include:</p>
+
+    <ul>
+        <li>The ability to add assignees to delegate responsibility;</li>
+        <li>Use labels for categorization and filtering;</li>
+        <li>Set milestones for project timelines;</li>
+        <li>Mention other users to bring issues to their attention.</li>
+        <li>Link issues to pull requests to track the work that is being done.</li>
+    </ul>
+
+    <p>You can read more about issues in the <a href="https://docs.github.com/en/issues/tracking-your-work-with-issues/about-issues" rel="noopener noreferrer nofollow">GitHub documentation.</a>&nbsp;</p>
+
+    <p>The GitHub API, on the other hand, is an interface that allows developers to interact programmatically with GitHub&#39;s vast suite of functionalities. It enables automation, integration with external services, and other custom tools. With the GitHub API, you can manage repositories, automate workflows, manipulate issues and pull requests, and much more, all through simple HTTP requests.&nbsp;</p>
+
+    <p>You can use the GitHub API to read and write repository data. This includes creating a new issue, listing issues, listing comments, and many more.&nbsp;You can read more about the GitHub API and see examples of its implementation in the <a href="https://docs.github.com/en/rest/about-the-rest-api/about-the-rest-api?apiVersion=2022-11-28" rel="noopener noreferrer nofollow">GitHub documentation.</a>&nbsp;</p>
+
+    <h2>Description</h2>
+
+    <p>
+        Use GitHub Actions to interact with the GitHub API to read issues and comments.
+        Accessing issues is made even simpler with the github.event variable in GitHub Actions.
+        This environment variable provides payload information about the event that triggered the workflow.
+        Use this variable to access issue details such as title, body, assignees, and labels and echo them back in the workflow logs.
+        These environment variables include:
+    </p>
+    <pre>
+<code class="language-yaml">Issue Number: ${{ github.event.issue.number }}
+Issue Body: ${{ github.event.issue.body }}
+Issue Assignees: ${{ join(github.event.issue.assignees.*.login, ', ') }}
+Issue Labels: ${{ join(github.event.issue.labels.*.name, ', ') }}</code></pre>
+    <p>These variables can also be used when creating the URLs needed to interact with the GitHub API. For example, to retrieve the issues, you can use the following commands in your workflow:</p>
+    <pre>
+<code class="language-yaml">ISSUE_NUMBER=${{ github.event.issue.number }}
+ISSUE_RESPONSE=$(curl -s https://api.github.com/repos/${{ github.repository }}/issues/$ISSUE_NUMBER)
+echo "Issue Information: $ISSUE_RESPONSE"</code></pre>
+
+    <h2>Objectives</h2>
+            <p>To pass this stage, perform the following:</p>
+            <ul>
+                <li> Modify the workflow to trigger when a new issue opened and when a closed issue is reopened;</li>
+                <li> Checkout the repository using the appropriate action;</li>
+                <li>Set and use environment variables to read the content of the issue that triggered the workflow taking advantage of the github.event variable to access issue details such as number, title, body, assignees, and labels as shown in the example above;</li>
+                <li>Echo the content back in the workflow logs;</li>
+            </ul>
+            <h2>Examples</h2>
+
+            <p><strong>Example 1:</strong></p>
+
+            <pre>
+<code class="language-yaml">name: Access Issue Information
+jobs:
+  access_issue_info:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print Issue Information
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          # other environment variables
+</code></pre>
+
+    <p><strong>Example 2:</strong></p>
+
+    <pre>
+<code class="language-yaml">name: Access Issue Information
+jobs:
+  access_issue_info:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print Issue Information
+        run: |
+            echo "Issue Number: ${ISSUE_NUMBER}"
+</code></pre>
+
+</div>

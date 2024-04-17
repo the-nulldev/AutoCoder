@@ -1,0 +1,40 @@
+name: Generate Code using ChatGPT and script.sh
+
+on:
+  issues:
+    types:
+      - opened
+      - reopened
+      - labeled
+
+jobs:
+  generate-code:
+    runs-on: ubuntu-latest
+    if: contains(github.event.issue.labels.*.name, 'autocoder-bot')
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set permissions for script.sh
+        run: chmod +x ./scripts/script.sh
+
+      - name: Run script.sh
+        run: ./scripts/script.sh ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} ${{ github.event.issue.number }} ${{ secrets.OPENAI_API_KEY }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload generated files as artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: autocoder-artifact
+          path: ./autocoder-bot/*
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: autocoder-artifact
+          path:  ./autocoder-artifact
+
+      - name: List files in the artifact
+        run: ls -R ./autocoder-artifact

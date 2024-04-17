@@ -1,0 +1,10 @@
+type: edu
+files:
+  - name: main.py
+    visible: true
+  - name: test/__init__.py
+    visible: false
+  - name: tests.py
+    visible: false
+  - name: test/tests.py
+    visible: false

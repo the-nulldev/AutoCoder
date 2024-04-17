@@ -1,0 +1,7 @@
+type: hyperskill
+title: AutoCoder
+language: English
+summary: 'This is a project that integrates AI to GitHub Actions workflows. '
+programming_language: Python
+content:
+  - AutoCoder

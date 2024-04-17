@@ -1,0 +1,16 @@
+type: edu
+files:
+  - name: main.py
+    visible: true
+  - name: script.sh
+    visible: true
+  - name: test/__init__.py
+    visible: false
+  - name: test/tests.py
+    visible: false
+  - name: tests.py
+    visible: false
+  - name: test/reference-metadata.yml
+    visible: false
+  - name: test/reference-workflow.yml
+    visible: false

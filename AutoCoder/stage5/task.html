@@ -1,0 +1,62 @@
+<div class="step-text">
+    <h2>Description</h2>
+
+    <p>Integrate OpenAI&#39;s ChatGPT into the workflow to generate code based on an issue&#39;s content. To streamline the process, a script file script.sh has been created for you. For this project, you have to use it as it is, but feel free to use it as a reference to create your own script file. The script will perform the following:</p>
+
+    <ul>
+        <li>Retrieve the issue number, repository, and authentication keys from the environment;</li>
+        <li>Use the GitHub API to retrieve the issue and extract the body that contains the prompt;</li>
+        <li>Add additional instructions, format the prompt, and send it to ChatGPT;</li>
+        <li>Extract the code snippets from the response and save all of them to their respective files inside the <code>autocoder-bot</code> directory;</li>
+    </ul>
+
+    <p>In this stage, modify your workflow to ensure that the correct environment is set up to run the script. Then, run the script file to generate code based on the issue content.
+        You should ensure that only issuer with the <code>autocoder-bot</code> label are processed by adding a conditional statement to the workflow.
+        Once the script has run, upload the generated files an artifact; then, download and list the contents of the artifact in the workflow logs.</p>
+
+    <h2>Objectives</h2>
+
+    <ul>
+        <li>Study the script file <code>script.sh</code> to understand how it interacts with ChatGPT and generates files;</li>
+        <li>Create a new repository secret&nbsp;for your repo with your OpenAI key as the value:
+            <ul>
+                <li><code>OPENAI_API_KEY</code> - Your OpenAI API key;</li>
+            </ul>
+        </li>
+        <li>Copy the contents of the script file script.sh and paste them into the script file you created earlier in your repository;</li>
+        <li>Identify the environment variables needed by the script and pass them to the script in the workflow file. Remember to pass them in the correct order;</li>
+        <li>The job or jobs in your workflow should have steps that do the following:
+            <ul>
+                <li>Make the script file executable by adding an execute <code> +x </code>permission;</li>
+                <li>Run the script file and pass the necessary environment variables to it;</li>
+                <li>Upload the content returned by the script as an artifact with the name <code>autocoder-artifact</code>;</li>
+                <li>Download the artifact to a directory named <code>autocoder-artifact</code>;</li>
+                <li> List all the files ensuring to list directories and files recursively;</li>
+            </ul>
+        <li>Ensure that the workflow only runs when the issue has the <code>autocoder-bot</code> label.</li>
+        </li>
+    </ul>
+
+    <h2>Examples</h2>
+
+    <p><strong>Example 1</strong></p>
+
+    <pre>
+<code class="language-yaml">
+steps:
+  - name: Generate Code with ChatGPT
+    id: generate_code
+    env:
+      # FIRST_ENV_KEY: ${{ secrets.SECRET_NAME }}
+      # SECOND_ENV_KEY: $(( env.VARIABLE_NAME }}
+    run: # ./path to script $FIRST_ENV_KEY $SECOND_ENV_KEY
+  - name: Upload Artifact
+    # action to upload an artifact
+    with:
+      # inputs
+      # inputs
+  - name: Display Generated Code using the ls command
+    # output code</code></pre>
+    <p style="text-align:center"><img alt="Workflow run for the stage" height="409" name="image.png" src="https://ucarecdn.com/2b2c6c01-0f38-48f6-b119-9476c1e87a76/" width="1000" /></p>
+    <p>After creating the issue, head back to your IDE and provide the full URL of the repository. Finally, hit the <em>Check</em> button.</p>
+</div>
